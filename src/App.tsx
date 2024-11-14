@@ -20,13 +20,34 @@ export type News = {
 
 const App = () => {
   const [loading, setLoading] = useState<boolean>(false);
-  const [newsData, setNewsData] = useState<News[] | null>(null);
+  const [newsData, setNewsData] = useState<News[] | []>([]);
   const [error, setError] = useState<boolean>(false);
+  const [page, setPage] = useState<number>(1);
+
+  const pageSize = 10;
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (
+        window.innerHeight + document.documentElement.scrollTop >=
+          document.documentElement.offsetHeight - 100 &&
+        !loading
+      ) {
+        setPage((prevState) => prevState + 1);
+      }
+    };
+
+    window.addEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
+  }, [loading]);
 
   const fetchData = async () => {
     try {
       const data = await fetch(
-        "https://newsapi.org/v2/top-headlines?country=us",
+        `https://newsapi.org/v2/top-headlines?country=us&page=${page}&pageSize=${pageSize}`,
         {
           method: "GET",
           headers: {
@@ -37,10 +58,8 @@ const App = () => {
 
       const res = await data.json();
       if (res.status === "ok") {
-        setNewsData(res.articles);
+        setNewsData((prevData) => [...prevData, ...res.articles]);
       }
-
-      console.log(newsData);
     } catch (err) {
       console.log("Error fetching news data", err);
       setError(true);
@@ -51,7 +70,7 @@ const App = () => {
     setLoading(true);
     fetchData();
     setLoading(false);
-  }, []);
+  }, [page]);
 
   return (
     <div className="flex items-center justify-center min-h-screen min-w-screen">
