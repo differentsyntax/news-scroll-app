@@ -73,32 +73,34 @@ const App = () => {
   }, [page]);
 
   return (
-    <div className="flex items-center justify-center min-h-screen min-w-screen">
-      <div className="fixed top-0 bg-black h-20 w-full flex justify-center items-center">
+    <div className="min-h-screen flex flex-col items-center bg-gray-100">
+      <header className="w-full bg-black fixed top-0 h-20 flex items-center justify-center shadow-md z-10">
         <h1 className="text-white text-lg font-semibold">
           Latest in the United States
         </h1>
-      </div>
-      <div className="flex items-center justify-center w-full my-32 mx-40">
-        {error && <h1>Error fetching data!</h1>}
-        {!error &&
-          (loading ? (
-            <h1>loading...</h1>
-          ) : !newsData ? (
-            <h1>Nothing to display...</h1>
-          ) : (
-            <ul>
-              {newsData.map((item, index) => (
-                <li
-                  key={index}
-                  className="flex justify-center items-center w-md m-4"
-                >
-                  <NewsContainer item={item} />
-                </li>
-              ))}
-            </ul>
-          ))}
-      </div>
+      </header>
+
+      <main className="flex flex-col items-center w-full px-4 mt-24">
+        {error ? (
+          <h1 className="text-red-500 text-xl font-bold">
+            Error fetching data!
+          </h1>
+        ) : loading ? (
+          <h1 className="text-gray-500 text-xl font-medium">Loading...</h1>
+        ) : newsData.length === 0 ? (
+          <h1 className="text-gray-700 text-lg font-medium">
+            Nothing to display...
+          </h1>
+        ) : (
+          <ul className="grid gap-4 w-full max-w-screen-lg">
+            {newsData.map((item, index) => (
+              <li key={index} className="bg-white rounded-lg shadow-md p-4">
+                <NewsContainer item={item} />
+              </li>
+            ))}
+          </ul>
+        )}
+      </main>
     </div>
   );
 };

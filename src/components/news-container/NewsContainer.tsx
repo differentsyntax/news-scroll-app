@@ -8,7 +8,6 @@ export type NewsContainerProps = {
 
 const NewsContainer = (props: NewsContainerProps) => {
   const [isOpenModal, setOpenModal] = useState<boolean>(false);
-
   const modalRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -33,15 +32,19 @@ const NewsContainer = (props: NewsContainerProps) => {
     <>
       <div
         onClick={() => setOpenModal(!isOpenModal)}
-        className="cursor-pointer hover:bg-blue-300 bg-blue-100 p-4 flex flex-col justify-center text-md text-gray-800 border rounded-md border-gray-500 border-dashed w-full md:h-40 lg:h-40"
+        className="cursor-pointer hover:bg-blue-200 bg-white shadow-md rounded-lg p-6 flex flex-col justify-between transition-all duration-200 ease-in-out transform hover:scale-105"
       >
-        <p className="text-sm text-gray-900 font-semibold">
-          {props.item.source.name}
+        <p className="text-sm text-gray-500 font-medium mb-2">
+          {props.item.source.name || "Unknown Source"}
         </p>
-        <p className="text-lg text-black font-bold">{props.item.title}</p>
-        <p className="text-md text-black">{props.item.content}</p>
-        <p className="text-md text-gray-600 font-semibold">
-          {props.item.author}
+        <h2 className="text-lg text-gray-900 font-semibold mb-4 line-clamp-2">
+          {props.item.title}
+        </h2>
+        <p className="text-sm text-gray-700 mb-4 line-clamp-3">
+          {props.item.content || "No content available."}
+        </p>
+        <p className="text-xs text-gray-400 font-medium">
+          {props.item.author || "Unknown Author"}
         </p>
       </div>
       {isOpenModal && <NewsModal modalRef={modalRef} item={props.item} />}
